@@ -53,6 +53,13 @@ def get_thumbnailer(obj, relative_name=None):
         if not relative_name:
             relative_name = obj.name
         return ThumbnailerFieldFile(obj.instance, obj.field, relative_name)
+    elif isinstance(obj, File):
+        if not relative_name:
+            relative_name = obj.name
+        
+        return Thumbnailer(
+            file=obj.file, name=obj.name, source_storage=None,
+            remote_source=obj is not None)
 
     source_storage = None
 
@@ -65,8 +72,6 @@ def get_thumbnailer(obj, relative_name=None):
             "If object is not a FieldFile or Thumbnailer instance, the "
             "relative name must be provided")
 
-    if isinstance(obj, File):
-        obj = obj.file
     if isinstance(obj, Storage) or obj == default_storage:
         source_storage = obj
         obj = None
